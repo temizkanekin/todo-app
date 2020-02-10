@@ -1,17 +1,17 @@
 export const todoList = [
     {
         id:1,
-        isCompleted: false,
+        status: 'Active',
         description : 'Complete the app with restful implementation'
     },
     {
         id:2,
-        isCompleted: false,
+        status: 'Active',
         description : 'Complete the app with fake db'
     },
     {
         id:3,
-        isCompleted: false,
+        status: 'Active',
         description : 'Finish all tasks in 2 days'
     }
 ]

@@ -1,13 +1,23 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableRow, TableCell, TextField, Typography, Checkbox, InputAdornment } from '@material-ui/core';
+import { Table, TableBody, TableRow, TableCell, TextField, Typography, Checkbox, InputAdornment, List, ListItem } from '@material-ui/core';
 import { Icon } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {addTodo, changeTodoStatus} from '../actions'
 class TodosView extends Component {
     state = {
+        status: undefined
     }
 
+    listActiveTodos = () => {
+        this.setState({ status : 'Active'})
+    }
+    listAllTodos = () => {
+        this.setState({ status : undefined})
+    }
+    listCompletedTodos = () => {
+        this.setState({ status : 'Completed'})
+    }
     render() {
         return (
             <React.Fragment>
@@ -21,7 +31,6 @@ class TodosView extends Component {
                                 placeholder="What needs to be done"
                                 onKeyPress={(e) => {
                                     if (e.key === 'Enter') {
-                                        // console.log(e.target.value);
                                         this.props.addTodo(e.target.value);
                                         e.target.value=""
                                     }
@@ -42,17 +51,26 @@ class TodosView extends Component {
                             </TableCell>
                         </TableRow>
                             {
-                                this.props.todos.map(todo => (
+                                this.props.todos.filter(todo => this.state.status ? (todo.status === this.state.status) : todo).map(todo => (
                                     <TableRow className="TableRow" key={todo.id} InputProps={{
                                         
                                     }}>       
                                         <TableCell>
-                                        <Checkbox onChange={() => this.props.changeTodoStatus(todo.id)}/>
+                                        <Checkbox checked={todo.status === 'Completed'} onChange={() => this.props.changeTodoStatus(todo.id)}/>
                                         {todo.description}
-                                        {todo.isCompleted && <Icon>done</Icon>}</TableCell>
+                                        {todo.status === 'Completed' && <Icon>done</Icon>}</TableCell>
                                     </TableRow>
                                 ))
                             }
+                        <TableRow className="TableRow">
+                            <TableCell className="TableCell">
+                                    <List style={{display:'flex'}}>
+                                        <ListItem button onClick={this.listAllTodos}>All</ListItem>
+                                        <ListItem button onClick={this.listActiveTodos}>Active</ListItem>
+                                        <ListItem button onClick={this.listCompletedTodos}>Completed</ListItem>
+                                    </List>
+                            </TableCell>
+                        </TableRow>
                         </TableBody>
                     </Table>
                 </div>
