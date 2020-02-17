@@ -7,10 +7,11 @@ class App extends Component {
   render() {
     return (
       <Router>
-      <Switch>
-        <Route path="" component={TodosView} />
-      </Switch>
-    </Router>
+        <Switch>
+          <Route path="/" component={TodosView} exact />
+          <Route path="/:status" component={TodosView} />
+        </Switch>
+      </Router>      
     );
   }
 }

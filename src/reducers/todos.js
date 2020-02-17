@@ -14,6 +14,11 @@ const todosState = (state = todoList, action) => {
             const selectedTodo = state.filter(st => st.id === action.payload)[0]
             selectedTodo.status = selectedTodo.status === 'Active' ? 'Completed' : 'Active'
             return [...state]
+
+        case 'CHANGE_ALL_TODO_STATUS':
+            state.forEach(todo => todo.status = todo.status === 'Active' ? 'Completed' : 'Active')
+            return [...state]
+
         default:
             return state;
     }

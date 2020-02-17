@@ -3,20 +3,19 @@ import { Table, TableBody, TableRow, TableCell, TextField, Typography, Checkbox,
 import { Icon } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {addTodo, changeTodoStatus} from '../actions'
+import {addTodo, changeTodoStatus, changeAllTodoStatus} from '../actions'
 class TodosView extends Component {
     state = {
-        status: undefined
     }
 
     listActiveTodos = () => {
-        this.setState({ status : 'Active'})
+        this.props.history.push('/Active')
     }
     listAllTodos = () => {
-        this.setState({ status : undefined})
+        this.props.history.push('/')
     }
     listCompletedTodos = () => {
-        this.setState({ status : 'Completed'})
+        this.props.history.push('/Completed')
     }
     render() {
         return (
@@ -38,7 +37,7 @@ class TodosView extends Component {
                                 InputProps={{
                                     startAdornment: (
                                       <InputAdornment>
-                                            <Icon>expand_more</Icon>
+                                            <Icon onClick={() => this.props.changeAllTodoStatus()}>expand_more</Icon>
                                       </InputAdornment>
                                     ),
                                     // endAdornment: (
@@ -51,14 +50,13 @@ class TodosView extends Component {
                             </TableCell>
                         </TableRow>
                             {
-                                this.props.todos.filter(todo => this.state.status ? (todo.status === this.state.status) : todo).map(todo => (
-                                    <TableRow className="TableRow" key={todo.id} InputProps={{
-                                        
-                                    }}>       
+                                this.props.todos.filter(todo => Object.keys(this.props.match.params).length > 0 ? (todo.status === this.props.match.params.status) : todo).map(todo => (
+                                    <TableRow className="TableRow" key={todo.id}>       
                                         <TableCell>
                                         <Checkbox checked={todo.status === 'Completed'} onChange={() => this.props.changeTodoStatus(todo.id)}/>
                                         {todo.description}
-                                        {todo.status === 'Completed' && <Icon>done</Icon>}</TableCell>
+                                        {todo.status === 'Completed' && <Icon>done</Icon>}
+                                        </TableCell>
                                     </TableRow>
                                 ))
                             }
@@ -82,10 +80,10 @@ class TodosView extends Component {
 
 const mapStateToProps = (state, ownProps) => {
     return {
-        todos: state.todos,
+        ...state
     }
 }
-
+//TODO bindActionCreators
 const mapDispatchToProps = (dispatch, ownProps) => {
     return {
         addTodo: (newTodo) => {
@@ -93,6 +91,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         changeTodoStatus: (todoId) => {
             dispatch(changeTodoStatus(todoId))
+        },
+        changeAllTodoStatus: () => {
+            dispatch(changeAllTodoStatus())
         }
     }
 }

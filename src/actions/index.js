@@ -11,3 +11,9 @@ export const changeTodoStatus = ( todoId ) => {
         payload: todoId
     }
 }
+
+export const changeAllTodoStatus = () => {
+    return {
+        type: 'CHANGE_ALL_TODO_STATUS',
+    }
+}

@@ -1,8 +1,6 @@
 .Table {
-  display: grid !important;
-  width: 100%;
-  justify-content: center !important;
-  margin-top: 200px !important;
+  width: 40%;
+  margin: auto;
 }
 .TableRow {
   width: 100% !important;
