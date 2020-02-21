@@ -6,9 +6,14 @@
   width: 100% !important;
 }
 .TableCell {
-  width: 100% !important;
-  display: table !important;
+  display: flex !important;
 }
+/* .TableCell {
+  width: 100% !important;
+  display: flex !important;
+  align-items: center;
+  border: 1px solid rgba(224, 224, 224, 1)
+} */
 .App {
   text-align: center;
 }
@@ -16,6 +21,11 @@
 .App-logo {
   height: 40vmin;
   pointer-events: none;
+}
+
+.ButtonList {
+  display: flex;
+  width: 100%;
 }
 
 @media (prefers-reduced-motion: no-preference) {

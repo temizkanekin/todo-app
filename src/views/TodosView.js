@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { Table, TableBody, TableRow, TableCell, TextField, Typography, Checkbox, InputAdornment, List, ListItem } from '@material-ui/core';
+import { Table, TableBody, TableRow, TableCell, TextField, Typography, Checkbox, InputAdornment, List, ListItem, Button } from '@material-ui/core';
 import { Icon } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import {addTodo, changeTodoStatus, changeAllTodoStatus} from '../actions'
+import classNames from 'classnames';
+import {addTodo, changeTodoStatus, changeAllTodoStatus, openTodoEditDialog} from '../actions'
+import EditTodoDialog from '../components/EditTodoDialog'
 class TodosView extends Component {
     state = {
     }
@@ -17,15 +19,19 @@ class TodosView extends Component {
     listCompletedTodos = () => {
         this.props.history.push('/Completed')
     }
+
+    openTodoEditDialog = (todoId) => {
+        this.props.openTodoEditDialog(todoId)
+    }
     render() {
         return (
             <React.Fragment>
-                <div className="Table">
+                <div className="w-1/3 m-auto">
                     <Typography variant="h2" style={{ color: "rgba(175, 47, 47, 0.15)", textAlign: "center" }}>todos</Typography>
                     <Table>
                         <TableBody>
-                            <TableRow className="TableRow">
-                            <TableCell className="TableCell">
+                            <TableRow className="w-full">
+                            <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
                             <TextField fullWidth
                                 placeholder="What needs to be done"
                                 onKeyPress={(e) => {
@@ -50,19 +56,19 @@ class TodosView extends Component {
                             </TableCell>
                         </TableRow>
                             {
-                                this.props.todos.filter(todo => Object.keys(this.props.match.params).length > 0 ? (todo.status === this.props.match.params.status) : todo).map(todo => (
-                                    <TableRow className="TableRow" key={todo.id}>       
-                                        <TableCell>
+                                this.props.todosState.todos.filter(todo => Object.keys(this.props.match.params).length > 0 ? (todo.status === this.props.match.params.status) : todo).map(todo => (
+                                    <TableRow className="w-full" key={todo.id}>       
+                                        <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
                                         <Checkbox checked={todo.status === 'Completed'} onChange={() => this.props.changeTodoStatus(todo.id)}/>
-                                        {todo.description}
-                                        {todo.status === 'Completed' && <Icon>done</Icon>}
+                                        <Typography style={{textDecoration: todo.status === 'Completed' && "line-through"}}>{todo.description}</Typography>
+                                        {<Button size="small" onClick={this.openTodoEditDialog.bind(this,todo.id)} style={{minWidth:0,marginRight: 0, marginLeft: 'auto'}}><Icon fontSize="small">edit</Icon></Button>}
                                         </TableCell>
                                     </TableRow>
                                 ))
                             }
-                        <TableRow className="TableRow">
-                            <TableCell className="TableCell">
-                                    <List style={{display:'flex'}}>
+                        <TableRow className="w-full">
+                            <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
+                                    <List className="ButtonList">
                                         <ListItem button onClick={this.listAllTodos}>All</ListItem>
                                         <ListItem button onClick={this.listActiveTodos}>Active</ListItem>
                                         <ListItem button onClick={this.listCompletedTodos}>Completed</ListItem>
@@ -72,6 +78,7 @@ class TodosView extends Component {
                         </TableBody>
                     </Table>
                 </div>
+                {this.props && this.props.todosState.todoEditDialogState.open && <EditTodoDialog/>}
             </React.Fragment>
         )
     }
@@ -94,6 +101,9 @@ const mapDispatchToProps = (dispatch, ownProps) => {
         },
         changeAllTodoStatus: () => {
             dispatch(changeAllTodoStatus())
+        },
+        openTodoEditDialog: (todoId) => {
+            dispatch(openTodoEditDialog(todoId))
         }
     }
 }

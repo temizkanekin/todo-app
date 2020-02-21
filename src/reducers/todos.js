@@ -1,23 +1,53 @@
 import {todoList, status} from '../@fake-db';
 
-const todosState = (state = todoList, action) => {
+const initialState = {
+    todos: todoList,
+    todoEditDialogState:{
+        open:false,
+        id:null
+    }
+}
+
+const todosState = (state = initialState, action) => {
     switch(action.type){
         case 'ADD_TODO':
-            state.push({
-                id: state.length+1,
+            state.todos.push({
+                id: state.todos.length+1,
                 status: status[0],
                 description: action.payload
             })
-            return [...state]
+            return {...state}
             
         case 'CHANGE_TODO_STATUS':
-            const selectedTodo = state.filter(st => st.id === action.payload)[0]
+            const selectedTodo = state.todos.filter(st => st.id === action.payload)[0]
             selectedTodo.status = selectedTodo.status === 'Active' ? 'Completed' : 'Active'
-            return [...state]
+            return {...state}
 
         case 'CHANGE_ALL_TODO_STATUS':
-            state.forEach(todo => todo.status = todo.status === 'Active' ? 'Completed' : 'Active')
-            return [...state]
+            state.todos.forEach(todo => todo.status = todo.status === 'Active' ? 'Completed' : 'Active')
+            return {...state}
+        
+        case 'OPEN_TODO_EDIT_DIALOG':
+            return {
+                ...state,
+                todoEditDialogState: {
+                    open:true,
+                    id:action.payload
+                }
+            }
+        case 'CLOSE_TODO_EDIT_DIALOG':
+            return {
+                ...state,
+                todoEditDialogState: {
+                    open:false,
+                    id:null
+                }
+            }
+        case 'UPDATE_TODO_DESCRIPTION':
+            state.todos.filter(todo => todo.id === state.todoEditDialogState.id)[0].description = action.payload
+            return {
+                ...state
+            }
 
         default:
             return state;
