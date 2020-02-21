@@ -24,6 +24,7 @@ class TodosView extends Component {
         this.props.openTodoEditDialog(todoId)
     }
     render() {
+        const { todos } = this.props.todosState
         return (
             <React.Fragment>
                 <div className="w-1/3 m-auto">
@@ -56,7 +57,7 @@ class TodosView extends Component {
                             </TableCell>
                         </TableRow>
                             {
-                                this.props.todosState.todos.filter(todo => Object.keys(this.props.match.params).length > 0 ? (todo.status === this.props.match.params.status) : todo).map(todo => (
+                                todos.filter(todo => Object.keys(this.props.match.params).length > 0 ? (todo.status === this.props.match.params.status) : todo).map(todo => (
                                     <TableRow className="w-full" key={todo.id}>       
                                         <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
                                         <Checkbox checked={todo.status === 'Completed'} onChange={() => this.props.changeTodoStatus(todo.id)}/>
@@ -68,7 +69,8 @@ class TodosView extends Component {
                             }
                         <TableRow className="w-full">
                             <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
-                                    <List className="ButtonList">
+                                    <Typography className="flex w-1/3" variant="subtitle2">{todos.length} items left</Typography>
+                                    <List className="flex w-2/5">
                                         <ListItem button onClick={this.listAllTodos}>All</ListItem>
                                         <ListItem button onClick={this.listActiveTodos}>Active</ListItem>
                                         <ListItem button onClick={this.listCompletedTodos}>Completed</ListItem>

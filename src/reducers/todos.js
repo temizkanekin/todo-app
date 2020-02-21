@@ -5,7 +5,8 @@ const initialState = {
     todoEditDialogState:{
         open:false,
         id:null
-    }
+    },
+    isAllTodosSelected:false
 }
 
 const todosState = (state = initialState, action) => {
@@ -24,8 +25,11 @@ const todosState = (state = initialState, action) => {
             return {...state}
 
         case 'CHANGE_ALL_TODO_STATUS':
-            state.todos.forEach(todo => todo.status = todo.status === 'Active' ? 'Completed' : 'Active')
-            return {...state}
+            state.isAllTodosSelected ? state.todos.forEach(todo => todo.status = 'Active') : state.todos.forEach(todo => todo.status = 'Completed')
+            return {
+                ...state,
+                isAllTodosSelected : !state.isAllTodosSelected
+            }
         
         case 'OPEN_TODO_EDIT_DIALOG':
             return {
