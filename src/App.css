@@ -18,6 +18,22 @@
   text-align: center;
 }
 
+.Toolbar {
+  height: 10%;
+}
+
+.Content {
+  height: 90%;
+}
+
+.Header {
+  height: 20%;
+}
+
+.Sidebar {
+  height: 80%;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;
