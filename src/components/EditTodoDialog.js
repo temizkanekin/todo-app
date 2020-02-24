@@ -2,7 +2,8 @@ import React,{Component} from 'react';
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import {Dialog,DialogContent,TextField, DialogActions, Button} from '@material-ui/core';
-import {closeTodoEditDialog, handleUpdateTodoDescription} from '../actions'
+import * as Actions from '../actions'
+import { bindActionCreators } from 'redux';
 
 class EditTodoDialog extends Component {
 
@@ -27,7 +28,6 @@ class EditTodoDialog extends Component {
         this.props.closeTodoEditDialog()
     }
 
-    //todo texfield'da ki son value'yi state kullanmadan dialog proplarından alabilmeyi sor, dialog'a ref vererekte yapılabilir mi ?
     render () {
         const { textFieldValue } = this.state
         const { todoEditDialogState} = this.props.todosState
@@ -50,14 +50,10 @@ const mapStateToProps = (state, ownProps) => {
     }
 }
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-         closeTodoEditDialog: () => {
-            dispatch(closeTodoEditDialog())
-        },
-        handleUpdateTodoDescription: (description) => {
-            dispatch(handleUpdateTodoDescription(description))
-        }
-    }
+    return bindActionCreators({
+        closeTodoEditDialog: Actions.closeTodoEditDialog,
+        handleUpdateTodoDescription: Actions.handleUpdateTodoDescription
+    }, dispatch)
 }
 export default withRouter(
     connect(

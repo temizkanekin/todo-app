@@ -4,17 +4,25 @@ import { Icon } from '@material-ui/core'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
 import classNames from 'classnames';
-import {addTodo, changeTodoStatus, changeAllTodoStatus, openTodoEditDialog} from '../actions'
+// import {addTodo, changeTodoStatus, changeAllTodoStatus, openTodoEditDialog} from '../actions'
 import EditTodoDialog from '../components/EditTodoDialog'
+import { bindActionCreators } from 'redux';
+import * as Actions from '../actions'
 class TodosView extends Component {
-    state = {
+    constructor(props){
+        super(props)
+        this.ref2=React.createRef()
+        this.state = {
+        }
     }
+    
+    ref = React.createRef()
 
     listActiveTodos = () => {
         this.props.history.push('/Active')
     }
     listAllTodos = () => {
-        this.props.history.push('/')
+        this.props.history.push('/All')
     }
     listCompletedTodos = () => {
         this.props.history.push('/Completed')
@@ -33,7 +41,7 @@ class TodosView extends Component {
                     <Table>
                         <TableBody>
                             <TableRow className="w-full">
-                            <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
+                            <TableCell style={{boxSizing : 'border-box'}} className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
                             <TextField fullWidth
                                 placeholder="What needs to be done"
                                 onKeyPress={(e) => {
@@ -55,7 +63,7 @@ class TodosView extends Component {
                             {
                                 todos.filter(todo => Object.keys(match.params).length > 0 ? (todo.status === match.params.status) : todo).map(todo => (
                                     <TableRow className="w-full" key={todo.id}>       
-                                        <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
+                                        <TableCell style={{boxSizing : 'border-box'}} className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
                                         <Checkbox checked={todo.status === 'Completed'} onChange={() => this.props.changeTodoStatus(todo.id)}/>
                                         <Typography style={{textDecoration: todo.status === 'Completed' && "line-through"}}>{todo.description}</Typography>
                                         {<Button size="small" onClick={this.openTodoEditDialog.bind(this,todo.id)} style={{minWidth:0,marginRight: 0, marginLeft: 'auto'}}><Icon fontSize="small">edit</Icon></Button>}
@@ -64,7 +72,7 @@ class TodosView extends Component {
                                 ))
                             }
                         <TableRow className="w-full">
-                            <TableCell className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
+                            <TableCell style={{boxSizing : 'border-box'}} className={classNames("w-full items-center border border-solid border-gray-300",'TableCell')}>
                                     <Typography className="flex w-1/3" variant="subtitle2">{todos.filter(todo => todo.status === 'Active').length} items left</Typography>
                                     <List className="flex w-2/5">
                                         <ListItem button onClick={this.listAllTodos}>All</ListItem>
@@ -88,22 +96,13 @@ const mapStateToProps = (state, ownProps) => {
         ...state
     }
 }
-//TODO bindActionCreators
 const mapDispatchToProps = (dispatch, ownProps) => {
-    return {
-        addTodo: (newTodo) => {
-            dispatch(addTodo(newTodo))
-        },
-        changeTodoStatus: (todoId) => {
-            dispatch(changeTodoStatus(todoId))
-        },
-        changeAllTodoStatus: () => {
-            dispatch(changeAllTodoStatus())
-        },
-        openTodoEditDialog: (todoId) => {
-            dispatch(openTodoEditDialog(todoId))
-        }
-    }
+    return bindActionCreators({
+        addTodo: Actions.addTodo,
+        changeTodoStatus: Actions.changeTodoStatus,
+        changeAllTodoStatus: Actions.changeAllTodoStatus,
+        openTodoEditDialog: Actions.openTodoEditDialog
+    }, dispatch)
 }
 export default withRouter(
     connect(
