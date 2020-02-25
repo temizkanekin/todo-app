@@ -1,4 +1,4 @@
-function StreamTest() {
+export function StreamTest() {
     this.subscribedFunctions = []
 
     this.subscribe = function (func) {

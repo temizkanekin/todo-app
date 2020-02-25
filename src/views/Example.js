@@ -1,11 +1,20 @@
 import React from 'react'
 import {Button} from '@material-ui/core'
 import { withRouter } from 'react-router'
-
+import { StreamTest } from '../test/Stream'
 const ExampleView = ({...props}) => {
     const { history } = props
     const [val,setVal] = React.useState(0)
     // Complete the compareTriplets function below.
+
+    const handleStreamTest = () => {
+        let z = new StreamTest()
+        z.subscribe((value) => console.log(value));
+        z.subscribe((value) => console.log(value*2));
+        z.subscribe((value) => console.log(value*3));
+        z.push(2)
+    }
+
     function compareTriplets(a, b) {
         // let a = [17,28,30]
         // let b= [99,16,8]
@@ -74,6 +83,7 @@ const ExampleView = ({...props}) => {
         <Button className="w-full h-full" onClick={()=>setVal(val+1)}>Increase Value: {val}</Button>
         <Button className="w-full h-full" onClick={miniMaxSum.bind(this,[1,2,3,4,5])}>Try Me</Button>
         <Button className="w-full h-full" onClick={()=>history.goBack()}>Back</Button>
+        <Button className="w-full h-full" onClick={handleStreamTest.bind(this)}>StreamTest</Button>
         </div>
 }
 
